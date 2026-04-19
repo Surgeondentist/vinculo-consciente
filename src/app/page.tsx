@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Heart, Shield, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import PostCard from "@/components/blog/PostCard";
+import AdUnit from "@/components/AdUnit";
 import { client } from "@/sanity/lib/client";
 import { latestPostsQuery } from "@/sanity/lib/queries";
 
@@ -94,9 +95,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Ad slot — below hero ── */}
+      {/* ── Ad — below hero ── */}
       <div className="mx-auto max-w-6xl px-4 py-6">
-        <div className="ad-slot h-24">Espacio publicitario — Leaderboard 728×90</div>
+        <AdUnit slot="4269170269" />
       </div>
 
       {/* ── Pilares ── */}
@@ -142,9 +143,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Ad slot — mid page ── */}
+      {/* ── Ad — mid page ── */}
       <div className="mx-auto max-w-6xl px-4 py-6">
-        <div className="ad-slot h-24">Espacio publicitario — Banner 970×90</div>
+        <AdUnit slot="4269170269" />
       </div>
 
       {/* ── Artículos recientes ── */}
@@ -199,9 +200,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Ad slot — above footer ── */}
+      {/* ── Ad — above footer ── */}
       <div className="mx-auto max-w-6xl px-4 py-6">
-        <div className="ad-slot h-24">Espacio publicitario — Leaderboard 728×90</div>
+        <AdUnit slot="4269170269" />
       </div>
     </main>
   );

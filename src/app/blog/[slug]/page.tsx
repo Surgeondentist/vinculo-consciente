@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { Calendar, Clock, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import AdUnit from "@/components/AdUnit";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -76,9 +77,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   return (
     <main>
-      {/* Top ad */}
+      {/* Ad — top */}
       <div className="mx-auto max-w-3xl px-4 pt-8">
-        <div className="ad-slot h-24">Espacio publicitario — Leaderboard 728×90</div>
+        <AdUnit slot="4269170269" />
       </div>
 
       <article className="mx-auto max-w-3xl px-4 py-10">
@@ -125,24 +126,24 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </div>
         )}
 
-        {/* Ad slot — top of article body */}
+        {/* Ad — in-article top */}
         <div className="mb-8">
-          <div className="ad-slot h-24">Espacio publicitario — In-article 728×90</div>
+          <AdUnit slot="4641764840" format="fluid" layout="in-article" fullWidthResponsive={false} />
         </div>
 
         <div className="prose prose-neutral dark:prose-invert prose-headings:font-heading prose-headings:font-semibold prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl max-w-none">
           {post.body && <PortableText value={post.body as Parameters<typeof PortableText>[0]["value"]} />}
         </div>
 
-        {/* Ad slot — mid article */}
+        {/* Ad — mid article square */}
         <div className="my-10">
-          <div className="ad-slot h-24">Espacio publicitario — In-article 300×250</div>
+          <AdUnit slot="2888653292" />
         </div>
       </article>
 
-      {/* Ad slot — below article */}
+      {/* Ad — below article */}
       <div className="mx-auto max-w-3xl px-4 pb-16">
-        <div className="ad-slot h-24">Espacio publicitario — Leaderboard 728×90</div>
+        <AdUnit slot="4269170269" />
       </div>
     </main>
   );

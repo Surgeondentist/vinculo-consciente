@@ -1,6 +1,7 @@
 import { client } from "@/sanity/lib/client";
 import { postsQuery, postsByCategory } from "@/sanity/lib/queries";
 import PostCard from "@/components/blog/PostCard";
+import AdUnit from "@/components/AdUnit";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -62,9 +63,9 @@ export default async function BlogPage({
       </section>
 
       <div className="mx-auto max-w-6xl px-4">
-        {/* Ad slot — top */}
+        {/* Ad — top */}
         <div className="py-6">
-          <div className="ad-slot h-24">Espacio publicitario — Leaderboard 728×90</div>
+          <AdUnit slot="4269170269" />
         </div>
 
         {/* Filtros */}
@@ -97,9 +98,9 @@ export default async function BlogPage({
           </div>
         )}
 
-        {/* Ad slot — bottom */}
+        {/* Ad — bottom */}
         <div className="pb-8">
-          <div className="ad-slot h-24">Espacio publicitario — Banner 970×90</div>
+          <AdUnit slot="4269170269" />
         </div>
       </div>
     </main>
