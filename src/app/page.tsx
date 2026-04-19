@@ -149,8 +149,12 @@ export default async function HomePage() {
 
       {/* ── Artículos recientes ── */}
       {posts.length > 0 && (
-        <section className="py-20">
-          <div className="mx-auto max-w-6xl px-4">
+        <section className="relative overflow-hidden py-20">
+          {/* Background for glassmorphism effect */}
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-100/60 via-purple-50/40 to-indigo-100/60 dark:from-violet-950/60 dark:via-purple-900/30 dark:to-indigo-950/60" />
+          <div className="absolute top-10 left-1/4 h-72 w-72 rounded-full bg-violet-300/20 blur-3xl dark:bg-violet-600/10" />
+          <div className="absolute bottom-10 right-1/4 h-56 w-56 rounded-full bg-purple-300/20 blur-3xl dark:bg-purple-600/10" />
+          <div className="relative mx-auto max-w-6xl px-4">
             <div className="mb-12 flex items-end justify-between">
               <div>
                 <h2 className="font-heading text-3xl font-bold text-foreground">Artículos recientes</h2>

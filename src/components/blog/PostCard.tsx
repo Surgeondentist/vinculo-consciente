@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Clock, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useRef, useState } from "react";
 
 const categoryLabels: Record<string, string> = {
   "salud-sexual": "Salud Sexual",
@@ -12,11 +15,11 @@ const categoryLabels: Record<string, string> = {
 };
 
 const categoryColors: Record<string, string> = {
-  "salud-sexual": "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300",
-  relaciones: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
-  educacion: "bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900/40 dark:text-fuchsia-300",
-  bienestar: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300",
-  faqs: "bg-secondary text-secondary-foreground",
+  "salud-sexual": "bg-violet-500/20 text-violet-200 border-violet-400/20",
+  relaciones: "bg-purple-500/20 text-purple-200 border-purple-400/20",
+  educacion: "bg-fuchsia-500/20 text-fuchsia-200 border-fuchsia-400/20",
+  bienestar: "bg-indigo-500/20 text-indigo-200 border-indigo-400/20",
+  faqs: "bg-white/10 text-white/70 border-white/10",
 };
 
 type Post = {
@@ -36,57 +39,108 @@ export default function PostCard({ post, featured }: { post: Post; featured?: bo
     ? new Date(post.publishedAt).toLocaleDateString("es-ES", { year: "numeric", month: "short", day: "numeric" })
     : null;
 
-  return (
-    <Link href={href} className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/30">
-      <div className={`relative overflow-hidden bg-secondary ${featured ? "h-52" : "h-44"}`}>
-        {post.coverImage?.asset?.url ? (
-          <Image
-            src={post.coverImage.asset.url}
-            alt={post.coverImage.alt ?? post.title}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center bg-gradient-to-br from-primary/10 via-accent/10 to-secondary">
-            <Sparkle />
-          </div>
-        )}
-        {post.category && (
-          <div className="absolute left-3 top-3">
-            <Badge className={`text-xs font-medium border-0 ${categoryColors[post.category] ?? "bg-secondary text-secondary-foreground"}`}>
-              {categoryLabels[post.category] ?? post.category}
-            </Badge>
-          </div>
-        )}
-      </div>
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [transform, setTransform] = useState("perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)");
+  const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
 
-      <div className="flex flex-1 flex-col p-5">
-        <h3 className={`mb-2 font-heading font-semibold leading-snug text-card-foreground transition-colors group-hover:text-primary ${featured ? "text-xl" : "text-base"}`}>
-          {post.title}
-        </h3>
-        {post.excerpt && (
-          <p className="mb-4 flex-1 line-clamp-2 text-sm leading-relaxed text-muted-foreground">{post.excerpt}</p>
-        )}
-        <div className="flex items-center gap-4 text-xs text-muted-foreground">
-          {date && (
-            <span className="flex items-center gap-1.5">
-              <Calendar className="h-3 w-3" /> {date}
-            </span>
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const rotateX = ((y - cy) / cy) * -10;
+    const rotateY = ((x - cx) / cx) * 10;
+    setTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`);
+    setGlare({ x: (x / rect.width) * 100, y: (y / rect.height) * 100, opacity: 0.12 });
+  }
+
+  function handleMouseLeave() {
+    setTransform("perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)");
+    setGlare((g) => ({ ...g, opacity: 0 }));
+  }
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ transform, transition: "transform 0.15s ease-out" }}
+      className="relative overflow-hidden rounded-2xl"
+    >
+      {/* Glassmorphism base */}
+      <div className="absolute inset-0 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-xl dark:border-white/10 dark:bg-white/5" />
+
+      {/* Glare effect */}
+      <div
+        className="pointer-events-none absolute inset-0 rounded-2xl"
+        style={{
+          background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,${glare.opacity}), transparent 60%)`,
+          transition: "opacity 0.15s ease",
+        }}
+      />
+
+      {/* Inner glow border */}
+      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/20 dark:ring-white/10" />
+
+      <Link href={href} className="relative flex flex-col">
+        {/* Image */}
+        <div className={`relative overflow-hidden rounded-t-2xl bg-gradient-to-br from-violet-500/30 to-purple-600/30 ${featured ? "h-52" : "h-44"}`}>
+          {post.coverImage?.asset?.url ? (
+            <Image
+              src={post.coverImage.asset.url}
+              alt={post.coverImage.alt ?? post.title}
+              fill
+              className="object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center">
+              <SparkleIcon />
+            </div>
           )}
-          {post.readTime && (
-            <span className="flex items-center gap-1.5">
-              <Clock className="h-3 w-3" /> {post.readTime} min
-            </span>
+          {/* Image overlay gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+
+          {post.category && (
+            <div className="absolute left-3 top-3">
+              <Badge className={`border text-xs font-medium backdrop-blur-sm ${categoryColors[post.category] ?? "bg-white/10 text-white/70 border-white/10"}`}>
+                {categoryLabels[post.category] ?? post.category}
+              </Badge>
+            </div>
           )}
         </div>
-      </div>
-    </Link>
+
+        {/* Content */}
+        <div className="flex flex-col p-5">
+          <h3 className={`mb-2 font-heading font-semibold leading-snug text-foreground transition-colors hover:text-primary ${featured ? "text-xl" : "text-base"}`}>
+            {post.title}
+          </h3>
+          {post.excerpt && (
+            <p className="mb-4 line-clamp-2 text-sm leading-relaxed text-muted-foreground">{post.excerpt}</p>
+          )}
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            {date && (
+              <span className="flex items-center gap-1.5">
+                <Calendar className="h-3 w-3" /> {date}
+              </span>
+            )}
+            {post.readTime && (
+              <span className="flex items-center gap-1.5">
+                <Clock className="h-3 w-3" /> {post.readTime} min
+              </span>
+            )}
+          </div>
+        </div>
+      </Link>
+    </div>
   );
 }
 
-function Sparkle() {
+function SparkleIcon() {
   return (
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="opacity-20 text-primary" stroke="currentColor" strokeWidth="1.5">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-white/30" stroke="currentColor" strokeWidth="1.5">
       <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />
     </svg>
   );
