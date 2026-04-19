@@ -51,6 +51,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('config', 'G-3BJ2C3CK6M');
           `}
         </Script>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4094870352712876"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </head>
       <body className="flex min-h-dvh flex-col bg-background font-sans text-foreground antialiased">
         <ThemeProvider>
