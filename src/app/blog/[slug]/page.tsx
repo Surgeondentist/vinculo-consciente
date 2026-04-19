@@ -32,6 +32,14 @@ const categoryLabels: Record<string, string> = {
   faqs: "FAQs",
 };
 
+const categoryColors: Record<string, string> = {
+  "salud-sexual": "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300",
+  relaciones: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
+  educacion: "bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900/40 dark:text-fuchsia-300",
+  bienestar: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300",
+  faqs: "bg-secondary text-secondary-foreground",
+};
+
 export async function generateStaticParams() {
   try {
     const posts: Post[] = await client.fetch(postsQuery);
@@ -67,52 +75,74 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     : null;
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
-      <Link href="/blog" className="mb-8 flex items-center gap-1.5 text-sm text-neutral-500 hover:text-rose-500">
-        <ArrowLeft className="h-4 w-4" /> Volver a artículos
-      </Link>
-
-      {post.category && (
-        <Badge className="mb-4 bg-rose-100 text-rose-600 hover:bg-rose-100">
-          {categoryLabels[post.category] ?? post.category}
-        </Badge>
-      )}
-
-      <h1 className="mb-4 text-3xl font-bold leading-tight text-neutral-900 md:text-4xl">{post.title}</h1>
-
-      {post.excerpt && (
-        <p className="mb-6 text-lg leading-relaxed text-neutral-500">{post.excerpt}</p>
-      )}
-
-      <div className="mb-8 flex items-center gap-5 text-sm text-neutral-400">
-        {date && <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" />{date}</span>}
-        {post.readTime && <span className="flex items-center gap-1.5"><Clock className="h-4 w-4" />{post.readTime} min de lectura</span>}
+    <main>
+      {/* Top ad */}
+      <div className="mx-auto max-w-3xl px-4 pt-8">
+        <div className="ad-slot h-24">Espacio publicitario — Leaderboard 728×90</div>
       </div>
 
-      {post.coverImage?.asset?.url && (
-        <div className="relative mb-10 h-72 w-full overflow-hidden rounded-2xl md:h-96">
-          <Image
-            src={post.coverImage.asset.url}
-            alt={post.coverImage.alt ?? post.title}
-            fill
-            className="object-cover"
-            priority
-          />
+      <article className="mx-auto max-w-3xl px-4 py-10">
+        <Link href="/blog" className="mb-8 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary">
+          <ArrowLeft className="h-4 w-4" /> Volver a artículos
+        </Link>
+
+        {post.category && (
+          <Badge className={`mb-5 border-0 ${categoryColors[post.category] ?? "bg-secondary text-secondary-foreground"}`}>
+            {categoryLabels[post.category] ?? post.category}
+          </Badge>
+        )}
+
+        <h1 className="mb-5 font-heading text-3xl font-bold leading-tight text-foreground md:text-4xl lg:text-5xl">
+          {post.title}
+        </h1>
+
+        {post.excerpt && (
+          <p className="mb-6 text-lg leading-relaxed text-muted-foreground">{post.excerpt}</p>
+        )}
+
+        <div className="mb-8 flex flex-wrap items-center gap-5 text-sm text-muted-foreground">
+          {date && (
+            <span className="flex items-center gap-1.5">
+              <Calendar className="h-4 w-4 text-primary/60" />{date}
+            </span>
+          )}
+          {post.readTime && (
+            <span className="flex items-center gap-1.5">
+              <Clock className="h-4 w-4 text-primary/60" />{post.readTime} min de lectura
+            </span>
+          )}
         </div>
-      )}
 
-      {/* AdSense placeholder — top of article */}
-      <div className="mb-8 flex h-24 items-center justify-center rounded-xl bg-neutral-50 text-xs text-neutral-300 border border-dashed border-neutral-200">
-        Espacio publicitario
-      </div>
+        {post.coverImage?.asset?.url && (
+          <div className="relative mb-10 h-64 w-full overflow-hidden rounded-2xl md:h-[420px]">
+            <Image
+              src={post.coverImage.asset.url}
+              alt={post.coverImage.alt ?? post.title}
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+        )}
 
-      <article className="prose prose-neutral prose-headings:font-semibold prose-a:text-rose-500 prose-a:no-underline hover:prose-a:underline max-w-none">
-        {post.body && <PortableText value={post.body as Parameters<typeof PortableText>[0]["value"]} />}
+        {/* Ad slot — top of article body */}
+        <div className="mb-8">
+          <div className="ad-slot h-24">Espacio publicitario — In-article 728×90</div>
+        </div>
+
+        <div className="prose prose-neutral dark:prose-invert prose-headings:font-heading prose-headings:font-semibold prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl max-w-none">
+          {post.body && <PortableText value={post.body as Parameters<typeof PortableText>[0]["value"]} />}
+        </div>
+
+        {/* Ad slot — mid article */}
+        <div className="my-10">
+          <div className="ad-slot h-24">Espacio publicitario — In-article 300×250</div>
+        </div>
       </article>
 
-      {/* AdSense placeholder — bottom of article */}
-      <div className="mt-10 flex h-24 items-center justify-center rounded-xl bg-neutral-50 text-xs text-neutral-300 border border-dashed border-neutral-200">
-        Espacio publicitario
+      {/* Ad slot — below article */}
+      <div className="mx-auto max-w-3xl px-4 pb-16">
+        <div className="ad-slot h-24">Espacio publicitario — Leaderboard 728×90</div>
       </div>
     </main>
   );

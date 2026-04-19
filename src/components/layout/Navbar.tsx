@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Heart } from "lucide-react";
+import { Menu, X, Sparkles, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const navLinks = [
@@ -12,50 +13,69 @@ const navLinks = [
   { href: "/blog?category=educacion", label: "Educación" },
 ];
 
+function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  return (
+    <button
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground cursor-pointer"
+      aria-label="Cambiar tema"
+    >
+      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+    </button>
+  );
+}
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-rose-100/40 bg-white/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2">
-          <Heart className="h-5 w-5 fill-rose-400 text-rose-400" />
-          <span className="font-semibold tracking-tight text-neutral-800">
-            Vínculo<span className="text-rose-400"> Consciente</span>
+    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+        <Link href="/" className="flex items-center gap-2 group">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+            <Sparkles className="h-4 w-4 text-primary-foreground" />
+          </div>
+          <span className="font-heading font-semibold tracking-tight text-foreground">
+            Vínculo<span className="text-primary"> Consciente</span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-1 md:flex">
           {navLinks.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className="text-sm text-neutral-600 transition-colors hover:text-rose-500"
+              className="rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
             >
               {l.label}
             </Link>
           ))}
         </nav>
 
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger className="md:hidden inline-flex items-center justify-center rounded-md p-2 text-neutral-600 hover:bg-neutral-100">
-            <Menu className="h-5 w-5" />
-          </SheetTrigger>
-          <SheetContent side="right" className="w-64 pt-10">
-            <nav className="flex flex-col gap-4">
-              {navLinks.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  className="text-base text-neutral-700 hover:text-rose-500"
-                >
-                  {l.label}
-                </Link>
-              ))}
-            </nav>
-          </SheetContent>
-        </Sheet>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger className="md:hidden flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:bg-secondary cursor-pointer">
+              {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </SheetTrigger>
+            <SheetContent side="right" className="w-72 pt-12 bg-background">
+              <nav className="flex flex-col gap-1">
+                {navLinks.map((l) => (
+                  <Link
+                    key={l.href}
+                    href={l.href}
+                    onClick={() => setOpen(false)}
+                    className="rounded-lg px-4 py-3 text-base text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );
