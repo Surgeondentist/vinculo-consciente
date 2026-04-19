@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     locale: "es_ES",
     type: "website",
   },
+  other: {
+    "google-adsense-account": "ca-pub-4094870352712876",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -52,10 +55,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           `}
         </Script>
         <Script
+          id="adsense"
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4094870352712876"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
         />
       </head>
       <body className="flex min-h-dvh flex-col bg-background font-sans text-foreground antialiased">
