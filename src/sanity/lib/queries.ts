@@ -11,7 +11,16 @@ export const postBySlugQuery = groq`
   *[_type == "post" && slug.current == $slug][0] {
     _id, title, slug, excerpt, category, readTime, publishedAt,
     coverImage { asset->{url}, alt },
-    body,
+    body[]{
+      ...,
+      _type == "image" => {
+        ...,
+        asset->{
+          url,
+          metadata { dimensions { width, height } }
+        }
+      }
+    },
     seoTitle, seoDescription,
   }
 `;

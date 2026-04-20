@@ -2,6 +2,7 @@ import { client } from "@/sanity/lib/client";
 import { postBySlugQuery, postsQuery } from "@/sanity/lib/queries";
 import { PortableText } from "next-sanity";
 import Image from "next/image";
+import { portablePostBodyComponents } from "@/components/blog/portableTextComponents";
 import { notFound } from "next/navigation";
 import { Calendar, Clock, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -121,6 +122,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               src={post.coverImage.asset.url}
               alt={post.coverImage.alt ?? post.title}
               fill
+              sizes="(max-width: 768px) 100vw, min(896px, 100vw)"
               className="object-cover"
               priority
             />
@@ -133,7 +135,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         </div>
 
         <div className="prose prose-neutral dark:prose-invert prose-headings:font-heading prose-headings:font-semibold prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl max-w-none">
-          {post.body && <PortableText value={post.body as Parameters<typeof PortableText>[0]["value"]} />}
+          {post.body && (
+            <PortableText
+              value={post.body as Parameters<typeof PortableText>[0]["value"]}
+              components={portablePostBodyComponents}
+            />
+          )}
         </div>
 
         {/* Ad — mid article square */}

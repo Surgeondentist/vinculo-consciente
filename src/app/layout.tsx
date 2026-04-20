@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import AdSenseScript from "@/components/AdSenseScript";
 
 const lora = Lora({
   subsets: ["latin"],
@@ -40,7 +41,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${lora.variable} ${raleway.variable} h-full`} suppressHydrationWarning>
+    <html
+      lang="es"
+      className={`${lora.variable} ${raleway.variable} h-full`}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-3BJ2C3CK6M"
@@ -54,15 +60,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('config', 'G-3BJ2C3CK6M');
           `}
         </Script>
-        <Script
-          id="adsense"
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4094870352712876"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
       </head>
       <body className="flex min-h-dvh flex-col bg-background font-sans text-foreground antialiased">
+        <AdSenseScript />
         <ThemeProvider>
           <Navbar />
           <div className="flex-1">{children}</div>

@@ -93,6 +93,7 @@ export default function PostCard({ post, featured }: { post: Post; featured?: bo
               src={post.coverImage.asset.url}
               alt={post.coverImage.alt ?? post.title}
               fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
